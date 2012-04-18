@@ -10,7 +10,11 @@ This gem requires a large number of classes to communicate with FedEx.  These cl
 Once you have the WSDL files, you will need to create the ruby classes used in the SOAP requests.  This is a one time process that can be handled by the gem.
 
 #### Rails
-This gem includes a rake task to generate the class definitions and create an initializer to load them if you are using it from within a Rails application.  Simply save the FedEx wsdl files to a directory (lib/fedex/web_services/wsdl in this example) and run:
+This gem includes a rake task to generate the class definitions and create an initializer to load them if you are using it from within a Rails application.  Simply save the FedEx wsdl files to a directory (lib/fedex/web_services/wsdl in this example) and include the gem in your Gemfile:
+
+    gem 'fedex-web-services', :require => 'fedex'
+
+Then run the following rake task
 
     $ WSDL_DIR=lib/fedex/web_services/wsdl rake fedex:generate_definitions
 
