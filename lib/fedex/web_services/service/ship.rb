@@ -76,7 +76,7 @@ module Fedex::WebServices
 
       protected
         def port
-          ShipPortType.new('https://wsbeta.fedex.com:443/web-services')
+          ShipPortType.new(service_url)
         end
     end
   end

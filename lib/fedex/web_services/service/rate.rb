@@ -33,7 +33,7 @@ module Fedex::WebServices
 
       protected
         def port
-          RatePortType.new('https://wsbeta.fedex.com:443/web-services')
+          RatePortType.new(service_url)
         end
     end
   end
