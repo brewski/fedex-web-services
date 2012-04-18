@@ -127,9 +127,9 @@ This will create the directory lib/fedex/web_services/definitions/ with the FedE
     ) do |request_contents|
       request_contents.requestedShipment.requestedPackageLineItems.each do |package_line_item|
         package_line_item.customerReferences = [
-          CustomerReference.new.tap do |o|
-            o.customerReferenceType = CustomerReferenceType::INVOICE_NUMBER
-            o.value = "INVOICE 1234"
+          CustomerReference.new.tap do |customer_reference|
+            customer_reference.customerReferenceType = CustomerReferenceType::INVOICE_NUMBER
+            customer_reference.value = "INVOICE 1234"
           end
         ]
       end
