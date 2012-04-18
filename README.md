@@ -4,7 +4,7 @@ This gem provies an interface to the FedEx web services API (version 10).  It in
 
 ## Setup
 ### Overview
-This gem requires a large number of classes to communicate with FedEx.  These classes are defined by the WSDL files for the FedEx web services API.  For copyright reasons this gem does not include the files.  You will need to create a FedEx developer account to download these files (at present this gem only support ShipService_v10.wsdl and RateService_v10.wsdl).  I recommend putting them under your project's lib/ directory in lib/fedex/web_services/wsdl.
+This gem requires a large number of classes to communicate with FedEx.  These classes are defined by the WSDL files for the FedEx web services API.  For copyright reasons this gem does not include the files.  You will need to create a FedEx developer account to download these files (this gem works with ShipService_v10.wsdl and RateService_v10.wsdl).  I recommend putting them under your project's lib/ directory in lib/fedex/web_services/wsdl.
 
 ### Creating the class definitions
 Once you have the WSDL files, you will need to create the ruby classes used in the SOAP requests.  This is a one time process that can be handled by the gem.
