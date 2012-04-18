@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
   s.executables   = [ ]
   s.require_paths = ["lib"]
 
+  s.add_dependency("soap4r-ruby19")
+  s.required_ruby_version = '>= 1.9.0'
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
   # s.add_runtime_dependency "rest-client"
