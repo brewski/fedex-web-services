@@ -2,13 +2,13 @@ module Fedex::WebServices
   module Request
     class GetRates < Base
 
-      def initialize(service, service_type, rate_request_type, shipper, recipient, weight)
+      def initialize(service, service_type, rate_request_type, from_address, to_address, weight)
 
         super(service)
 
         @service_type = service_type
-        @shipper = shipper
-        @recipient = recipient
+        @from_address = from_address
+        @to_address = to_address
         @rate_request_type = rate_request_type
         @requested_package_line_items = [
           RequestedPackageLineItem.new.tap do |o|
@@ -31,11 +31,16 @@ module Fedex::WebServices
 
           o.requestedShipment = RequestedShipment.new.tap do |o|
             o.shipTimestamp = Time.now.iso8601
-            o.serviceType   = @service_type
+            o.serviceType = @service_type
             o.packagingType = PackagingType::YOUR_PACKAGING
 
-            o.shipper   = @shipper
-            o.recipient = @recipient
+            o.shipper = Party.new.tap do |o|
+              o.address = @from_address
+            end
+
+            o.recipient = Party.new.tap do |o|
+              o.address = @to_address
+            end
 
             o.shippingChargesPayment = Payment.new.tap do |o|
               o.paymentType = PaymentType::SENDER

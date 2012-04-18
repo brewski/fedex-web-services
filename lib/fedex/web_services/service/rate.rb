@@ -4,12 +4,12 @@ module Fedex::WebServices
   module Service
     class Rate < Base
 
-      def get_rates(service_type, rate_request_type, shipper, recipient, weight, &process_contents)
+      def get_rates(service_type, rate_request_type, from, to, weight, &process_contents)
         request = GetRates.new(self,
           service_type,
           rate_request_type,
-          shipper,
-          recipient,
+          from,
+          to,
           weight
         )
 
