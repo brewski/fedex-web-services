@@ -1,18 +1,34 @@
-## Creating the FedEx Web Services class definitions
-### Rails
-This gem includes a rake task to generate the class definitions and create an initializer to load them if you are using it from within a rails application.  Simply save the FedEx wsdl files to a directory (lib/fedex/web_services/wsdl in this example) and run:
+# fedex-web-services
+## Description
+This gem provies an interface to the FedEx web services API (version 10).  It interfaces with the FedEx web services SOAP API to look up shipping rates, generate labels, and cancel shipments (tracking coming soon).
+
+## Setup
+### Overview
+This gem requires a large number of classes to communicate with FedEx.  These classes are defined by the WSDL files for the FedEx web services API.  For copyright reasons this gem does not include the files.  You will need to create a FedEx developer account do download these files (at present this gem only support ShipService_v10.wsdl and RateService_v10.wsdl).  I recommend putting them under your project's lib/ directory in lib/fedex/web_services/wsdl.
+
+### Creating the class definitions
+Once you have the WSDL files, you will need to create the ruby classes used in the SOAP requests.  This is a one time process that can be handled by the gem.
+
+#### Rails
+This gem includes a rake task to generate the class definitions and create an initializer to load them if you are using it from within a Rails application.  Simply save the FedEx wsdl files to a directory (lib/fedex/web_services/wsdl in this example) and run:
 
     $ WSDL_DIR=lib/fedex/web_services/wsdl rake fedex:generate_definitions
+
+You should see output looking like this.
+
     Added lib/fedex/web_services/definitions/
     Added config/initializers/fedex.rb
 
-### Manual creation
+#### Manual creation
 You can also manually generate the class files.  To to this, run the following command:
 
     require 'fedex'
-    Fedex::WebServices::Definitions.generate_definitions('lib', *Dir.glob('path/to/wsdls/*.wsdl'))
+    Fedex::WebServices::Definitions.generate_definitions('lib', *Dir.glob('lib/web_services/wsdls/*.wsdl'))
 
-This will create the directory lib/fedex/web_services/definitions/ with the FedEx Web Services class definitions in it.
+This will create the directory lib/fedex/web_services/definitions/ with the FedEx web services class definitions in it.  After you have created the classes, simply include the following lines in your application to load them:
+
+    require 'fedex'
+    Fedex::WebServices::Definitions.load_definitions('lib')
 
 ## Examples
 ### Getting shipping rates
@@ -39,76 +55,68 @@ This will create the directory lib/fedex/web_services/definitions/ with the FedE
     #   :production
     # )
 
-    shipper = Party.new.tap do |o|
-      o.address = Address.new.tap do |o|
-        o.postalCode  = "93401"
-        o.countryCode = "US"
-        o.residential = true
-      end
-    end
+    from = Address.new
+    from.postalCode  = "93401"
+    from.countryCode = "US"
+    from.residential = true
 
-    recipient = Party.new.tap do |o|
-      o.address = Address.new.tap do |o|
-        o.postalCode  = "95630"
-        o.countryCode = "US"
-        o.residential = true
-      end
-    end
+    to = Address.new
+    to.postalCode  = "95630"
+    to.countryCode = "US"
+    to.residential = true
 
-    weight = Weight.new.tap do |o|
-      o.units = "LB"
-      o.value = 42.42
-    end
+    weight = Weight.new
+    weight.units = "LB"
+    weight.value = 42.42
 
     rate_service = Service::Rate.new(credentials)
     rate, response = rate_service.get_rates(
-      ServiceType::FEDEX_2_DAY, RateRequestType::LIST, shipper, recipient, weight
+      ServiceType::FEDEX_2_DAY, RateRequestType::LIST, from, to, weight
     )
     puts "List rate for 42.42 lbs, 2 day from 93401 to 07541: #{rate.to_f}"
 
 
 ### Creating a shipment with multiple packages
 
-    shipper = Party.new.tap do |o|
-      o.contact = Contact.new.tap do |o|
-        o.personName  = "Joe Shmoe"
-        o.phoneNumber = "(123) 456 789"
+    shipper = Party.new.tap do |shipper|
+      shiper.contact = Contact.new.tap do |contact|
+        contact.personName  = "Joe Shmoe"
+        contact.phoneNumber = "(123) 456 789"
       end
-      o.address = Address.new.tap do |o|
-        o.streetLines         = [ "123 4th St" ]
-        o.city                = "San Luis Obispo"
-        o.stateOrProvinceCode = "CA"
-        o.postalCode          = "93401"
-        o.countryCode         = "US"
-        o.residential         = true
-      end
-    end
-
-    recipient = Party.new.tap do |o|
-      o.contact = Contact.new.tap do |o|
-        o.personName  = "Joe Shmoe"
-        o.phoneNumber = "(123) 456 789"
-      end
-      o.address = Address.new.tap do |o|
-        o.streetLines         = [ "123 5th St" ]
-        o.city                = "San Luis Obispo"
-        o.stateOrProvinceCode = "CA"
-        o.postalCode          = "93401"
-        o.countryCode         = "US"
-        o.residential         = true
+      shipper.address = Address.new.tap do |address|
+        address.streetLines         = [ "123 4th St" ]
+        address.city                = "San Luis Obispo"
+        address.stateOrProvinceCode = "CA"
+        address.postalCode          = "93401"
+        address.countryCode         = "US"
+        address.residential         = true
       end
     end
 
-    label_specification = LabelSpecification.new.tap do |o|
-      o.labelFormatType = LabelFormatType::COMMON2D
-      o.imageType       = ShippingDocumentImageType::PDF
-      o.labelStockType  = ShippingDocumentStockType::PAPER_LETTER
+    recipient = Party.new.tap do |recipient|
+      recipient.contact = Contact.new.tap do |contact|
+        contact.personName  = "Ahwahnee Hotel"
+        contact.phoneNumber = "(801) 559-5000"
+      end
+      recipient.address = Address.new.tap do |address|
+        address.streetLines         = [ "9006 Yosemite Lodge Drive" ]
+        address.city                = "Yosemite National Park"
+        address.stateOrProvinceCode = "CA"
+        address.postalCode          = "95389"
+        address.countryCode         = "US"
+        address.residential         = true
+      end
     end
+
+    label_specification = LabelSpecification.new
+    label_specification.labelFormatType = LabelFormatType::COMMON2D
+    label_specification.imageType       = ShippingDocumentImageType::PDF
+    label_specification.labelStockType  = ShippingDocumentStockType::PAPER_LETTER
 
     weights = [ 55.34, 10.2 ].map do |weight|
-      Weight.new.tap do |o|
-        o.units = "LB"
-        o.value = weight
+      Weight.new.tap do |w|
+        w.units = "LB"
+        w.value = weight
       end
     end
 
