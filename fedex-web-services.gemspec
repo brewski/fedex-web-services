@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/brewski/fedex-web-services"
   s.summary     = %q{Provies an interface to the FedEx web services API (version 10)}
   s.description = %q{Interfaces with the FedEx web services API to look up shipping rates, generate labels, and cancel shipments}
+  s.license     = 'MIT'
 
   s.rubyforge_project = "fedex-web-services"
 
