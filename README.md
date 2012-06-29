@@ -10,27 +10,28 @@ This gem requires a large number of classes to communicate with FedEx.  These cl
 Once you have the WSDL files, you will need to create the ruby classes used in the SOAP requests.  This is a one time process that can be handled by the gem.
 
 #### Rails
-This gem includes a rake task to generate the class definitions and create an initializer to load them if you are using it from within a Rails application.  Simply save the FedEx wsdl files to a directory (lib/fedex/web_services/wsdl in this example) and include the gem in your Gemfile:
+This gem includes a generator to create the class definitions and an initializer to load them if you are using it from within a Rails application.  Simply save the FedEx wsdl files to a directory (lib/fedex/web_services/wsdl in this example) and include the gem in your Gemfile:
 
 ```ruby
 gem 'fedex-web-services', :require => 'fedex'
 ```
 
-Then run the following rake task
+Then run the following generator:
 
-    $ WSDL_DIR=lib/fedex/web_services/wsdl rake fedex:generate_definitions
+    $ rails g fedex:generate_definitions
+    Added /Users/brewski/nutsonline.com/git/kernelweb/lib/fedex/web_services/definitions
+      create  config/initializers/fedex.rb
 
-You should see output looking like this.
+For more details, run the generator with the --help option:
 
-    Added lib/fedex/web_services/definitions/
-    Added config/initializers/fedex.rb
+    $ rails g fedex:generate_definitions --help
 
 #### Manual creation
 You can also manually generate the class files.  To to this, run the following command:
 
 ```ruby
 require 'fedex'
-Fedex::WebServices::Definitions.generate_definitions('lib', *Dir.glob('lib/web_services/wsdls/*.wsdl'))
+Fedex::WebServices::Definitions.generate_definitions('lib', *Dir.glob('lib/fedex/web_services/wsdl*.wsdl'))
 ```
 
 This will create the directory lib/fedex/web_services/definitions/ with the FedEx web services class definitions in it.  After you have created the classes, simply include the following lines in your application to load them:
