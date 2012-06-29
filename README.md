@@ -46,7 +46,7 @@ Fedex::WebServices::Definitions.load_definitions('lib')
 
 ```ruby
 require 'fedex'
-# config/initializers/fedex.rb handles this if you are in a Rails app and have run the rake task above
+# config/initializers/fedex.rb handles this if you are in a Rails app and have run the generator above
 # Fedex::WebServices::Definitions.load_definitions('lib')
 
 include Fedex::WebServices
