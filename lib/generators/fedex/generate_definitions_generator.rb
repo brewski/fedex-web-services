@@ -29,7 +29,7 @@ module Fedex
 
           unless (options[:skip_initializer])
             create_file(FEDEX_INITIALIZER_FILE,
-                "Fedex::WebServices::Definitions.load_definitions('#{target_lib_dir}')")
+                "Fedex::WebServices::Definitions.load_definitions('lib')")
           end
         end
       end
