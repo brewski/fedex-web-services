@@ -72,6 +72,8 @@ module Fedex::WebServices
                   acc + BigDecimal.new(rate.netCharge.amount) :
                   acc
             end
+      rescue
+        raise "Unable to extract rate information from response"
       end
 
       protected

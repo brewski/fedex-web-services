@@ -10,7 +10,7 @@ module Fedex::WebServices
       include Fedex::WebServices::Definitions
       include Fedex::WebServices::Request
 
-      Credentials = Struct.new("Credentials",
+      Credentials = Struct.new(
         :account_number, :meter_number, :key, :password, :environment
       )
 
