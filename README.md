@@ -155,15 +155,6 @@ tracking_numbers = responses.map do |(tracking_number, label, charge)|
   File.open("#{tracking_number}.pdf", "w") { |f| f << label }
   tracking_number
 end
-
-tracking_numbers.each do |tracking_number|
-  ship_service.delete_shipment(
-    TrackingId.new.tap do |tracking_id|
-      tracking_id.trackingNumber = tracking_number
-      tracking_id.trackingIdType = TrackingIdType::EXPRESS
-    end
-  )
-end
 ```
 
 ### Canceling a shipment
