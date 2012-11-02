@@ -86,7 +86,7 @@ rate_service = Service::Rate.new(credentials)
 rate, response = rate_service.get_rates(
   ServiceType::FEDEX_2_DAY, RateRequestType::LIST, from, to, weight
 )
-puts "List rate for 42.42 lbs, 2 day from 93401 to 07541: #{rate.to_f}"
+puts "List rate for 42.42 lbs, 2 day from 93401 to 95630: #{rate.to_f}"
 ```
 
 ### Creating a shipment with multiple packages
