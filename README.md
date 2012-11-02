@@ -1,6 +1,6 @@
 # fedex-web-services
 ## Description
-This gem provies an interface to the FedEx web services API.  It supports version 12 of the ship service and version 13 of the rate service (the current versions as of November 2012).  It interfaces with the FedEx web services SOAP API to look up shipping rates, generate labels, and cancel shipments (tracking coming soon).
+This gem provides an interface to the FedEx web services API.  It supports version 12 of the ship service and version 13 of the rate service (the current versions as of November 2012).  It interfaces with the FedEx web services SOAP API to look up shipping rates, generate labels, and cancel shipments (tracking coming soon).
 
 ## Setup
 ### Overview
