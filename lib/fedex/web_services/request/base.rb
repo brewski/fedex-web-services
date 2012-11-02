@@ -33,7 +33,7 @@ module Fedex::WebServices
         def version
           VersionId.new.tap do |o|
             o.serviceId    = @service.service_id
-            o.major        = 10
+            o.major        = @service.service_version
             o.intermediate = 0
             o.minor        = 0
           end

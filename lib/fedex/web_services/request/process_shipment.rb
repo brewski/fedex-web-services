@@ -58,7 +58,9 @@ module Fedex::WebServices
             o.shippingChargesPayment = Payment.new.tap do |o|
               o.paymentType = PaymentType::SENDER
               o.payor = Payor.new.tap do |o|
-                o.accountNumber = @service.credentials.account_number
+                o.responsibleParty = @shipper.clone.tap do |o|
+                  o.accountNumber = @service.credentials.account_number
+                end
               end
             end
 

@@ -21,6 +21,10 @@ module Fedex::WebServices
         :crs
       end
 
+      def service_version
+        13
+      end
+
       def self.rate_for(response, rate_request_type)
         details = response.rateReplyDetails.first.ratedShipmentDetails.select do |detail|
           detail.shipmentRateDetail.rateType == "PAYOR_#{rate_request_type}_PACKAGE"

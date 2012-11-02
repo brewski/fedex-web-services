@@ -25,6 +25,10 @@ module Fedex::WebServices
         raise "service_id must be implemented by subclasses of Service"
       end
 
+      def service_version
+        raise "service_version must be implemented by subclasses of Service"
+      end
+
       def service_url
         (@credentials.environment.to_sym == :production) ?
             'https://ws.fedex.com:443/web-services' :

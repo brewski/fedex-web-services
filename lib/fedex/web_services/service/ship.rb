@@ -9,6 +9,10 @@ module Fedex::WebServices
         :ship
       end
 
+      def service_version
+        12
+      end
+
       def process_shipment(service_type, shipper, recipient,
           label_specification, package_weights, &process_contents)
 

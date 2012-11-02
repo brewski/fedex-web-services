@@ -1,10 +1,10 @@
 # fedex-web-services
 ## Description
-This gem provies an interface to the FedEx web services API (version 10).  It interfaces with the FedEx web services SOAP API to look up shipping rates, generate labels, and cancel shipments (tracking coming soon).
+This gem provies an interface to the FedEx web services API.  It supports version 12 of the ship service and version 13 of the rate service (the current versions as of November 2012).  It interfaces with the FedEx web services SOAP API to look up shipping rates, generate labels, and cancel shipments (tracking coming soon).
 
 ## Setup
 ### Overview
-This gem requires a large number of classes to communicate with FedEx.  These classes are defined by the WSDL files for the FedEx web services API.  For copyright reasons this gem does not include the files.  You will need to create a FedEx developer account to download these files (this gem works with ShipService_v10.wsdl and RateService_v10.wsdl).  I recommend putting them under your project's lib/ directory in lib/fedex/web_services/wsdl.
+This gem requires a large number of classes to communicate with FedEx.  These classes are defined by the WSDL files for the FedEx web services API.  For copyright reasons this gem does not include the files.  You will need to create a FedEx developer account to download these files (this gem works with ShipService_v12.wsdl and RateService_v13.wsdl).  I recommend putting them under your project's lib/ directory in lib/fedex/web_services/wsdl.
 
 ### Creating the class definitions
 Once you have the WSDL files, you will need to create the ruby classes used in the SOAP requests.  This is a one time process that can be handled by the gem.
@@ -31,7 +31,7 @@ You can also manually generate the class files.  To to this, run the following c
 
 ```ruby
 require 'fedex'
-Fedex::WebServices::Definitions.generate_definitions('lib', *Dir.glob('lib/fedex/web_services/wsdl*.wsdl'))
+Fedex::WebServices::Definitions.generate_definitions('lib', *Dir.glob('lib/fedex/web_services/wsdl/*.wsdl'))
 ```
 
 This will create the directory lib/fedex/web_services/definitions/ with the FedEx web services class definitions in it.  After you have created the classes, simply include the following lines in your application to load them:
@@ -56,7 +56,8 @@ credentials = Service::Base::Credentials.new(
   "ACCOUNT#",
   "METER#",
   "AUTH_KEY",
-  "SECURITY_CODE"
+  "SECURITY_CODE",
+  :test
 )
 
 # prod_credentials = Service::Base::Credentials.new(
@@ -154,15 +155,39 @@ tracking_numbers = responses.map do |(tracking_number, label, charge)|
   File.open("#{tracking_number}.pdf", "w") { |f| f << label }
   tracking_number
 end
+
+tracking_numbers.each do |tracking_number|
+  ship_service.delete_shipment(
+    TrackingId.new.tap do |tracking_id|
+      tracking_id.trackingNumber = tracking_number
+      tracking_id.trackingIdType = TrackingIdType::EXPRESS
+    end
+  )
+end
 ```
 
 ### Canceling a shipment
 
 ```ruby
-ship_service.delete_shipment(
-  TrackingId.new.tap do |tracking_id|
-    tracking_id.trackingNumber = tracking_numbers.first
-    tracking_id.trackingIdType = TrackingIdType::EXPRESS
-  end
-)
+tracking_numbers.each do |tracking_number|
+  ship_service.delete_shipment(
+    TrackingId.new.tap do |tracking_id|
+      tracking_id.trackingNumber = tracking_number
+      tracking_id.trackingIdType = TrackingIdType::EXPRESS
+    end
+  )
+end
+```
+
+### Debugging
+You can see the SOAP wiredump by accessing Service::Base#wiredump after issuing a request.
+```ruby
+begin
+  rate, response = rate_service.get_rates(
+    ServiceType::FEDEX_2_DAY, RateRequestType::LIST, from, to, weight
+  )
+rescue
+  puts rate_service.wiredump
+  raise $!
+end
 ```
