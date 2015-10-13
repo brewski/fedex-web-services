@@ -19,6 +19,7 @@ module Fedex::WebServices
 
       def initialize(credentials)
         @credentials = credentials
+        @wiredump = ""
       end
 
       def service_id
@@ -43,7 +44,7 @@ module Fedex::WebServices
       private
         def issue_request(request)
           port = self.port
-          port.wiredump_dev = StringIO.new(@wiredump = "")
+          port.wiredump_dev = StringIO.new(request_wiredump = "")
 
           request_contents = request.contents
           yield(request_contents) if (block_given?)
@@ -56,6 +57,8 @@ module Fedex::WebServices
           err.details = root_exception.detail.fault.details.validationFailureDetail.message rescue nil
           err.set_backtrace([ "#{__FILE__}:#{__LINE__ + 1}", *root_exception.backtrace ])
           raise err
+        ensure
+          @wiredump << request_wiredump if (request_wiredump)
         end
 
         def check_response(response)
