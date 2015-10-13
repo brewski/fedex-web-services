@@ -13,38 +13,28 @@ module Fedex::WebServices
         12
       end
 
-      def process_shipment(service_type, shipper, recipient,
-          label_specification, package_weights, &process_contents)
+      def process_shipment(service_type, shipper, recipient, label_specification, package_weights)
+        requests = ProcessShipment.mps_requests(
+            self, service_type, shipper, recipient, label_specification, package_weights)
 
-        curry_process_contents_callback = ->(request_number) do
-          return ->(request_contents) do
-            process_contents.call(request_contents, request_number) if (process_contents)
-          end
-        end
-
-        requests = ProcessShipment.mps_requests(self,
-          service_type,
-          shipper,
-          recipient,
-          label_specification,
-          package_weights
-        )
-
-        first, rest = requests.first, requests[1..-1]
-
-        first_response = issue_request(first, &curry_process_contents_callback.call(1))
-
-        rest_responses = rest.map.with_index do |request, index|
-          issue_request(request) do |request_contents|
-            request_contents.requestedShipment.masterTrackingId = TrackingId.new.tap do |o|
-              o.trackingNumber = Ship::tracking_number_for(first_response)
+        first_response = nil
+        responses = requests.map.with_index do |request, ndx|
+          if (ndx == 0)
+            first_response = issue_request(request) do |request_contents|
+              yield(request_contents, ndx + 1) if (block_given?)
             end
+          else
+            issue_request(request) do |request_contents|
+              request_contents.requestedShipment.masterTrackingId = TrackingId.new.tap do |ti|
+                ti.trackingNumber = Ship::tracking_number_for(first_response)
+              end
 
-            curry_process_contents_callback.call(index + 2).call(request_contents)
+              yield(request_contents, ndx + 1) if (block_given?)
+            end
           end
         end
 
-        [ first_response, *rest_responses ].map do |response|
+        responses.map do |response|
           [
             self.class.tracking_number_for(response),
             self.class.label_for(response),
