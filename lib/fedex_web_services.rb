@@ -9,3 +9,5 @@ require 'fedex_web_services/delete_shipment_request'
 require 'fedex_web_services/process_shipment_request'
 
 require "fedex_web_services/api"
+
+require "fedex_web_services/railtie" if (defined?(Rails))
