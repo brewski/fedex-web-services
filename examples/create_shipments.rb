@@ -62,6 +62,8 @@ requests.each do |request|
   request.sender_paid!(credentials.account_number)
   request.list_rate!
   request.regular_pickup!
+  request.customer_reference!("01234")
+  request.customer_invoice!("56789")
 end
 
 tracking_numbers = api.process_shipments(requests).map do |response|
