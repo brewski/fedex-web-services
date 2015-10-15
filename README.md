@@ -5,8 +5,6 @@ This gem provides an interface to the FedEx web services API.  It supports versi
 ## Testing
 This gem includes a small integration test suite to test several of the API methods in the FedEx sandbox environment. You can run the tests from the source of this gem, or from within a rails application that includes this gem:
 
-### Rails Applications
-
 ```bash
 export FEDEX_ACCOUNT=account FEDEX_METER=meter FEDEX_AUTH_KEY=authkey FEDEX_SECURITY_CODE=code
 bundle exec rake fedex_web_services:test
