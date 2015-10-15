@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = FedexWebServices::VERSION
   spec.authors       = ["Brian Abreu"]
   spec.email         = ["brian@nuts.com"]
-  spec.description   = %q{Interfaces with the FedEx web services API to look up shipping rates, generate labels, and cancel shipments}
+  spec.description   = %q{Interfaces with the FedEx SOAP web services API}
   spec.summary       = %q{Provides an interface to the FedEx web services API}
   spec.homepage      = "https://github.com/brewski/fedex-web-services"
   spec.license       = "MIT"
