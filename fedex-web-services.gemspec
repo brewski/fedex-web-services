@@ -1,28 +1,26 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "fedex/version"
-require "rake"
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'fedex_web_services/version'
 
-Gem::Specification.new do |s|
-  s.name        = "fedex-web-services"
-  s.version     = Fedex::VERSION
-  s.authors     = ["Brian Abreu"]
-  s.email       = ["brian@nut.com"]
-  s.homepage    = "https://github.com/brewski/fedex-web-services"
-  s.summary     = %q{Provies an interface to the FedEx web services API (version 10)}
-  s.description = %q{Interfaces with the FedEx web services API to look up shipping rates, generate labels, and cancel shipments}
-  s.license     = 'MIT'
+Gem::Specification.new do |spec|
+  spec.name          = "fedex-web-services"
+  spec.version       = FedexWebServices::VERSION
+  spec.authors       = ["Brian Abreu"]
+  spec.email         = ["brian@nuts.com"]
+  spec.description   = %q{Interfaces with the FedEx web services API to look up shipping rates, generate labels, and cancel shipments}
+  spec.summary       = %q{Provides an interface to the FedEx web services API}
+  spec.homepage      = "https://github.com/brewski/fedex-web-services"
+  spec.license       = "MIT"
 
-  s.rubyforge_project = "fedex-web-services"
+  spec.files         = `git ls-files`.split($/)
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ["lib"]
 
-  s.files         = FileList[ "lib/**/*" ]
-  s.test_files    = [ ]
-  s.executables   = [ ]
-  s.require_paths = ["lib"]
+  spec.add_dependency "soap4r-ng", '~> 2.0'
+  spec.required_ruby_version = '>= 2.0.0'
 
-  s.add_dependency "soap4r-ng", '~> 2.0'
-  s.required_ruby_version = '>= 1.9.0'
-  # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_development_dependency "rake"
 end

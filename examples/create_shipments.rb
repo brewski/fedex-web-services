@@ -1,11 +1,3 @@
-# fedex-web-services
-## Description
-This gem provides an interface to the FedEx web services API.  It supports version 12 of the ship service and version 4 of the close service.
-
-## Examples
-### Creating a shipment with multiple packages
-
-```ruby
 require 'fedex_web_services'
 
 include FedexWebServices
@@ -78,26 +70,10 @@ tracking_numbers = api.process_shipments(requests).map do |response|
   puts "Wrote #{filename}"
   response.tracking_number
 end
-```
 
-### Canceling a shipment
-
-```ruby
 tracking_numbers.each do |tracking_number|
   delete_request = DeleteShipmentRequest.new
   delete_request.delete_all_packages!(tracking_number, Ship::TrackingIdType::EXPRESS)
   api.delete_shipment(delete_request)
   puts "Deleted shipment #{tracking_number}"
 end
-```
-
-### Debugging
-You can see the SOAP wiredump by accessing Api#wiredump after issuing a request.
-```ruby
-begin
-  api.process_shipments(...)
-rescue
-  puts api.wiredump
-  raise $!
-end
-```
