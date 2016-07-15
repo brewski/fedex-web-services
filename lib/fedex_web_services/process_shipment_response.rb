@@ -10,7 +10,7 @@ module FedexWebServices
     def tracking_number
       contents.completedShipmentDetail.completedPackageDetails[0].trackingIds[0].trackingNumber
     rescue
-      raise "Unable to extract tracking number from response"
+      raise Api::ServiceException, "Unable to extract tracking number from response"
     end
 
     def package_rate
@@ -22,7 +22,7 @@ module FedexWebServices
             acc
       end
     rescue
-      raise "Unable to extract rate information from response"
+      raise Api::ServiceException, "Unable to extract rate information from response"
     end
   end
 end
