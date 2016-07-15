@@ -55,7 +55,6 @@ module FedexWebServices
           end
         end
       rescue Exception => root_exception
-        raise
         err = ServiceException.new(root_exception.message)
         err.details = root_exception.detail.fault.details.validationFailureDetail.message rescue nil
         raise err
