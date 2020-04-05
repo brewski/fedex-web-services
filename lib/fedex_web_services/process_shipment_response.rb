@@ -18,7 +18,7 @@ module FedexWebServices
 
       details.packageRating.packageRateDetails.inject(0) do |acc, rate|
         rate.rateType == FedexWebServices::Soap::Ship::ReturnedRateType::PAYOR_ACCOUNT_PACKAGE ?
-            acc + BigDecimal.new(rate.netCharge.amount) :
+            acc + BigDecimal(rate.netCharge.amount) :
             acc
       end
     rescue
