@@ -86,7 +86,7 @@ module FedexWebServices
             rs.requestedPackageLineItems = mod::RequestedPackageLineItem.new.tap do |rpli|
               rpli.sequenceNumber = ndx + 1
               rpli.weight = weight
-              rpli.specialServicesRequested = special_services_requested
+              rpli.specialServicesRequested = special_services_requested if special_services_requested
             end
           end
         end
