@@ -38,6 +38,18 @@ module FedexWebServices
       end
     end
 
+    def third_party_paid!(account_number)
+      mod = self.soap_module
+
+      contents.requestedShipment.shippingChargesPayment = mod::Payment.new.tap do |scp|
+        scp.paymentType = mod::PaymentType::THIRD_PARTY
+
+        scp.payor = mod::Payor.new
+        scp.payor.responsibleParty = contents.requestedShipment.shipper.dup
+        scp.payor.responsibleParty.accountNumber = account_number
+      end
+    end
+
     def regular_pickup!
       contents.requestedShipment.dropoffType = soap_module::DropoffType::REGULAR_PICKUP
     end
