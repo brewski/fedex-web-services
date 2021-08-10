@@ -100,6 +100,7 @@ module FedexWebServices
               rpli.weight = weight
               rpli.specialServicesRequested = special_services_requested if special_services_requested
               rpli.dimensions = dimensions[ndx]
+              rpli.groupPackageCount = package_weights.size
             end
           end
         end
