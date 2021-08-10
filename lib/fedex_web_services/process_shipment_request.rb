@@ -80,7 +80,7 @@ module FedexWebServices
       contents.requestedShipment.requestedPackageLineItems.customerReferences << ref
     end
 
-    def self.shipment_requests(service_type, from, to, label_specification, package_weights, special_services_requested)
+    def self.shipment_requests(service_type, from, to, label_specification, package_weights, special_services_requested, dimensions)
       package_weights.map.with_index do |weight, ndx|
         new.tap do |request|
           mod = request.soap_module
@@ -99,6 +99,7 @@ module FedexWebServices
               rpli.sequenceNumber = ndx + 1
               rpli.weight = weight
               rpli.specialServicesRequested = special_services_requested if special_services_requested
+              rpli.dimensions = dimensions[ndx]
             end
           end
         end
