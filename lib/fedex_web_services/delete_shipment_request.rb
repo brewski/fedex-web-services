@@ -17,7 +17,7 @@ module FedexWebServices
     end
 
     def version
-      12
+      28
     end
 
     def delete_all_packages!(tracking_number, tracking_number_type)

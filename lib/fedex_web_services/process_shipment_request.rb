@@ -19,7 +19,7 @@ module FedexWebServices
     end
 
     def version
-      12
+      28
     end
 
     def issue_request(port, credentials)
@@ -76,7 +76,7 @@ module FedexWebServices
           request.contents.requestedShipment = mod::RequestedShipment.new.tap do |rs|
             rs.shipTimestamp = Time.now.iso8601
             rs.serviceType   = service_type
-            rs.packagingType = mod::PackagingType::YOUR_PACKAGING
+            rs.packagingType = "YOUR_PACKAGING"
 
             rs.shipper   = from
             rs.recipient = to

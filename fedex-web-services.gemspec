@@ -19,5 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "soap4r-ng", '~> 2.0'
+  spec.add_dependency "rake"
+  spec.add_dependency "logger-application"
   spec.required_ruby_version = '>= 2.0.4'
 end
