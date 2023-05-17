@@ -33,9 +33,6 @@ module FedexWebServices
       issue_request(Ship::ShipPortType.new(service_url), request)
     end
 
-    def get_rates(request)
-    end
-
     def close_smart_post(request)
       issue_request(Close::ClosePortType.new(service_url), request)
     end
