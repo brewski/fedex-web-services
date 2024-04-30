@@ -2,24 +2,27 @@ require 'base64'
 
 module FedexWebServices
   class ProcessShipmentResponse < Response
-    def label
-      label = contents.completedShipmentDetail.completedPackageDetails.first.label
-      Base64.decode64(label.parts.map { |p| Base64.decode64(p.image) } * "")
+    def label_images
+      contents.completedShipmentDetail.completedPackageDetails.map do |details|
+        Base64.decode64(details.label.parts.map { |p| Base64.decode64(p.image) } * "")
+      end
     end
 
-    def tracking_number
-      contents.completedShipmentDetail.completedPackageDetails[0].trackingIds[0].trackingNumber
+    def tracking_ids
+      contents.completedShipmentDetail.completedPackageDetails.map do |details|
+        details.trackingIds
+      end
     rescue
       raise Api::ServiceException, "Unable to extract tracking number from response"
     end
 
-    def package_rate
-      details = contents.completedShipmentDetail.completedPackageDetails.first
-
-      details.packageRating.packageRateDetails.inject(0) do |acc, rate|
-        rate.rateType == FedexWebServices::Soap::Ship::ReturnedRateType::PAYOR_ACCOUNT_PACKAGE ?
-            acc + BigDecimal(rate.netCharge.amount) :
-            acc
+    def package_rates
+      contents.completedShipmentDetail.completedPackageDetails.map do |details|
+        details.packageRating.packageRateDetails.inject(0) do |acc, rate|
+          rate.rateType == FedexWebServices::Soap::Ship::ReturnedRateType::PAYOR_ACCOUNT_PACKAGE ?
+              acc + BigDecimal(rate.netCharge.amount) :
+              acc
+        end
       end
     rescue
       raise Api::ServiceException, "Unable to extract rate information from response"
