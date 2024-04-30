@@ -23,7 +23,9 @@ module FedexWebServices
         if (ndx == 0)
           first_response = issue_request(port, request)
         else
-          request.for_master_tracking_number!(first_response.tracking_number)
+          request.for_master_tracking_number!(
+            first_response.contents.completedShipmentDetail.masterTrackingId.trackingNumber
+          )
           issue_request(port, request)
         end
       end
