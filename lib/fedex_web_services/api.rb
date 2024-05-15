@@ -39,6 +39,10 @@ module FedexWebServices
       issue_request(Close::ClosePortType.new(service_url), request)
     end
 
+    def upload_images(request)
+      issue_request(UploadDocument::UploadDocumentPortType.new(service_url), request)
+    end
+
     def service_url
       @service_url ||= (@credentials.environment.to_sym == :production) ?
           'https://ws.fedex.com/web-services' :
